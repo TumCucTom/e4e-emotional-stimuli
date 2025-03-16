@@ -27,7 +27,8 @@ class LatentEditor(object):
             while current <= stop:  # Ensure stop is included
                 factors.append(current)
                 current += step  # Increment manually
-            
+
+            print(factors)
             # Apply transformations using manually generated factors
             for f in factors:
                 edit_latent = latent + f * direction
