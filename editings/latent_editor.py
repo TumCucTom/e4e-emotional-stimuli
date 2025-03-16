@@ -18,17 +18,11 @@ class LatentEditor(object):
 
     def apply_interfacegan(self, latent, direction, factor=1, vary=0):
         edit_latents = []
-        
-        if vary != 0:
-            # Apply transformations using manually generated factors
-            for f in [0,0.35,0.7,1.05,1.4,1.75,2.1,2.45,2.8]:
-                edit_latent = latent + f * direction
-                edit_latents.append(edit_latent.unsqueeze(0))  # Keep shape consistent
-    
-            edit_latents = torch.cat(edit_latents, dim=0)  # Stack into batch
-        else:
-            edit_latents = latent + factor * direction
+        for f in [0,0.35,0.7,1.05,1.4,1.75,2.1,2.45,2.8]:
+            edit_latent = latent + f * direction
+            edit_latents.append(edit_latent.unsqueeze(0))  # Keep shape consistent
 
+        edit_latents = torch.cat(edit_latents, dim=0)  # Stack into batch
         return self._latents_to_image(edit_latents)
 
     def apply_sefa(self, latent, indices=[2, 3, 4, 5], **kwargs):
