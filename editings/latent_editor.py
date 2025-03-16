@@ -1,5 +1,6 @@
 import torch
 import sys
+import nupmy as np
 sys.path.append(".")
 sys.path.append("..")
 from editings import ganspace, sefa
@@ -19,13 +20,9 @@ class LatentEditor(object):
         edit_latents = []
         
         if factor_range is not None:
-            if not isinstance(factor_range, list):  # Ensure factor_range is a list
-                raise TypeError("factor_range must be a list of values.")
-
-            print(f"Applying factors: {factor_range}")  # Debugging output
-
-            # Apply transformations using each value in factor_range
-            for f in factor_range:
+            factors = np.array(factor_range)
+            # Apply transformations using manually generated factors
+            for f in factors:
                 edit_latent = latent + f * direction
                 edit_latents.append(edit_latent.unsqueeze(0))  # Keep shape consistent
     
@@ -33,8 +30,7 @@ class LatentEditor(object):
         else:
             edit_latents = latent + factor * direction
 
-        return self._latents_to_image(edit_latents)  # Ensure correct indentation
-
+        return self._latents_to_image(edit_latents)
 
     def apply_sefa(self, latent, indices=[2, 3, 4, 5], **kwargs):
         edit_latents = sefa.edit(self.generator, latent, indices, **kwargs)
