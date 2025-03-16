@@ -16,13 +16,12 @@ class LatentEditor(object):
         edit_latents = ganspace.edit(latent, ganspace_pca, edit_directions)
         return self._latents_to_image(edit_latents)
 
-    def apply_interfacegan(self, latent, direction, factor=1, factor_range=None):
+    def apply_interfacegan(self, latent, direction, factor=1):
         edit_latents = []
         
         if factor_range is not None:
-            factors = np.array(factor_range)
             # Apply transformations using manually generated factors
-            for f in factors:
+            for f in [0,0.35,0.7,1.05,1.4,1.75,2.1,2.45,2.8]:
                 edit_latent = latent + f * direction
                 edit_latents.append(edit_latent.unsqueeze(0))  # Keep shape consistent
     
