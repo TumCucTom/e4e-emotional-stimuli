@@ -17,14 +17,26 @@ class LatentEditor(object):
 
     def apply_interfacegan(self, latent, direction, factor=1, factor_range=None):
         edit_latents = []
-        if factor_range is not None:  # Apply a range of editing factors. for example, (-5, 5)
-            for f in factor_range:
+        
+        if factor_range is not None:
+            # Ensure factor_range is correctly formatted (start, stop, step)
+            start, stop, step = factor_range
+            factors = torch.arange(start, stop, step, dtype=torch.float32)  # Generate float steps
+    
+            for f in factors:
                 edit_latent = latent + f * direction
                 edit_latents.append(edit_latent)
-            edit_latents = torch.cat(edit_latents)
+    
+            edit_latents = torch.cat(edit_latents)  # Stack all generated latents
         else:
             edit_latents = latent + factor * direction
+    
         return self._latents_to_image(edit_latents)
+
+def apply_sefa(self, latent, indices=[2, 3, 4, 5], **kwargs):
+    edit_latents = sefa.edit(self.generator, latent, indices, **kwargs)
+    return self._latents_to_image(edit_latents)
+
 
     def apply_sefa(self, latent, indices=[2, 3, 4, 5], **kwargs):
         edit_latents = sefa.edit(self.generator, latent, indices, **kwargs)
