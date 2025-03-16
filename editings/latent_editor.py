@@ -19,24 +19,25 @@ class LatentEditor(object):
         edit_latents = []
         
         if factor_range is not None:
-            # Ensure factor_range is correctly formatted (start, stop, step)
+            # Manually generate float values in the specified range
             start, stop, step = factor_range
-            factors = torch.arange(start, stop, step, dtype=torch.float32)  # Generate float steps
-    
+            factors = []
+            current = start
+            
+            while current <= stop:  # Ensure stop is included
+                factors.append(current)
+                current += step  # Increment manually
+            
+            # Apply transformations using manually generated factors
             for f in factors:
                 edit_latent = latent + f * direction
-                edit_latents.append(edit_latent)
+                edit_latents.append(edit_latent.unsqueeze(0))  # Keep shape consistent
     
-            edit_latents = torch.cat(edit_latents)  # Stack all generated latents
+            edit_latents = torch.cat(edit_latents, dim=0)  # Stack into batch
         else:
             edit_latents = latent + factor * direction
-    
-        return self._latents_to_image(edit_latents)
 
-def apply_sefa(self, latent, indices=[2, 3, 4, 5], **kwargs):
-    edit_latents = sefa.edit(self.generator, latent, indices, **kwargs)
     return self._latents_to_image(edit_latents)
-
 
     def apply_sefa(self, latent, indices=[2, 3, 4, 5], **kwargs):
         edit_latents = sefa.edit(self.generator, latent, indices, **kwargs)
