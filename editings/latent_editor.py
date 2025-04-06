@@ -1,6 +1,6 @@
 import torch
 import sys
-import nupmy as np
+import numpy as np
 sys.path.append(".")
 sys.path.append("..")
 from editings import ganspace, sefa
